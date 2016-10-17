@@ -9,6 +9,7 @@
 import UIKit
 import Foundation
 import AFNetworking
+import MBProgressHUD
 
 
 
@@ -43,28 +44,6 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         self.moviesTableView.insertSubview(refreshControl, at: 0)
         
         refreshMovieData()
-        
-//        let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
-//        let url = NSURL(string:"https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
-//        let request = NSURLRequest(URL: url!)
-//        let session = NSURLSession(
-//            configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
-//            delegate:nil,
-//            delegateQueue:NSOperationQueue.mainQueue()
-//        )
-//        
-//        let task : NSURLSessionDataTask = session.dataTaskWithRequest(request, completionHandler:{(dataOrNil, response, error) in
-//            if let data = dataOrNil {
-//                if let responseDictionary =
-//                    try! NSJSONSerialization.JSONObjectWithData(data, options:[]) as? NSDictionary {
-//                        print("response: \(responseDictionary)")
-//                        //***May need to change to as!
-//                        self.movies = responseDictionary["results"] as? [NSDictionary]
-//                        self.moviesTableView.reloadData()
-//                }
-//            }
-//        });
-//        task.resume()
 
         // Do any additional setup after loading the view.
     }
@@ -80,11 +59,10 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     
     //Called when user selects a row in the table
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        
-        moviesTableView.deselectRow(at: indexPath, animated:true)
-//        let cell = moviesTableView.dequeueReusableCellWithIdentifier("MovieCell", forIndexPath: indexPath) as! MovieCell
-        
-//        performSegueWithIdentifier("movieDetailSegue", sender: cell)
+        //For some reason this seems to be passing in the indexPath of the previous selection
+        moviesTableView.deselectRow(at: indexPath, animated: true)
+        print("Selected row \(indexPath.row) // IndexPath: \(indexPath)")
+
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
@@ -102,15 +80,28 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         let cell = moviesTableView.dequeueReusableCell(withIdentifier: "MovieCell", for: indexPath) as! MovieCell
         
         let movie = movies![(indexPath as NSIndexPath).row]
-        let title = movie["title"] as! String
-        let overview = movie["overview"] as! String
-        let posterPath = movie["poster_path"] as! String
+//        let title = movie["title"] as! String
+        if let title = movie["title"] as? String{
+            cell.titleLabel.text = title
+        }
+
+//        let overview = movie["overview"] as! String
+        if let overview = movie["overview"] as? String{
+            cell.overviewLabel.text = overview
+        }
         
-        let posterUrl = URL(string: self.basePosterUrl + posterPath)
+//        let posterPath = movie["poster_path"] as! String
+        if let posterPath = movie["poster_path"] as? String{
+            if let posterUrl = URL(string: self.basePosterUrl + posterPath){
+                cell.posterImageView.setImageWith(posterUrl)
+            }
+        }
         
-        cell.titleLabel.text = title
-        cell.overviewLabel.text = overview
-        cell.posterImageView.setImageWith(posterUrl!)
+//        let posterUrl = URL(string: self.basePosterUrl + posterPath)
+        
+//        cell.titleLabel.text = title
+//        cell.overviewLabel.text = overview
+//        cell.posterImageView.setImageWith(posterUrl!)
         
         return cell
     }
@@ -138,6 +129,17 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         self.moviePosterUrl = URL(string: self.basePosterUrl + self.posterPath)!
         
         destinationViewController.moviePosterUrl = self.moviePosterUrl
+        
+        let cell = sender as! UITableViewCell
+        let indexPath = moviesTableView.indexPath(for: cell)!
+        let movie = movies![indexPath.row]
+        let dvc2 = segue.destination as! MovieDetailViewController
+        dvc2.movie = movie
+        dvc2.basePosterUrlString = self.basePosterUrl
+        
+        moviesTableView.deselectRow(at: indexPath, animated: true)
+
+        print("indexpath.row inside of prepare: \(indexPath.row)")
     }
     
     //*
@@ -155,6 +157,16 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
             delegateQueue:OperationQueue.main
         )
         
+        //Force the data to clear
+//        self.movies = [[:]]
+//        self.moviesTableView.reloadData()
+        
+        //Display progress icon
+        self.refreshControl.beginRefreshing()
+        MBProgressHUD.showAdded(to: self.view, animated: true)
+//        MBProgressHUD.showAdded(to: self.moviesTableView, animated: true)
+//        MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        
         let task : URLSessionDataTask = session.dataTask(with: request, completionHandler:{(dataOrNil, response, error) in
             if let data = dataOrNil {
                 if let responseDictionary =
@@ -165,6 +177,9 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                         self.moviesTableView.reloadData()
                         self.refreshControl.endRefreshing()
                         print("refresh finished")
+                        MBProgressHUD.hide(for: self.view, animated: true)
+//                        MBProgressHUD.hide(for: self.moviesTableView, animated: true)
+//                        MBProgressHUD.hideHUDForView(self.view, animated: true)
                 }
             }
         });

@@ -36,6 +36,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     let gridIndex: Int = 1
     
     let refreshControl = UIRefreshControl()
+    let refreshControlTable = UIRefreshControl()
     
     //*
     //MARK - Lifecycle overrides
@@ -57,7 +58,9 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         
         refreshControl.addTarget(self, action: #selector(MoviesViewController.refreshControlAction(_:)), for: UIControlEvents.valueChanged)
         
-        self.moviesTableView.insertSubview(refreshControl, at: 0)
+        refreshControlTable.addTarget(self, action: #selector(MoviesViewController.refreshControlAction(_:)), for: UIControlEvents.valueChanged)
+        
+        self.moviesTableView.insertSubview(refreshControlTable, at: 0)
         self.moviesCollectionView.insertSubview(refreshControl, at: 0)
         
         refreshMovieData()
@@ -273,12 +276,14 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                         self.moviesTableView.reloadData()
                         self.moviesCollectionView.reloadData()
                         self.refreshControl.endRefreshing()
+                        self.refreshControlTable.endRefreshing()
                         print("refresh finished")
                         MBProgressHUD.hide(for: self.view, animated: true)
                 }
             }else{
                 self.networkErrorView.isHidden = false
                 self.refreshControl.endRefreshing()
+                self.refreshControlTable.endRefreshing()
                 print("refresh finished")
                 MBProgressHUD.hide(for: self.view, animated: true)
             }

@@ -18,6 +18,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
 
     //UI bindings
     @IBOutlet weak var moviesTableView: UITableView!
+    @IBOutlet weak var networkErrorView: UIView!
     
     //Instance Variables
     var movies: [NSDictionary]?
@@ -25,6 +26,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     var selectedIndexPath: IndexPath = IndexPath()
     let basePosterUrl = "https://image.tmdb.org/t/p/w500"
     var posterPath: String = ""
+    var apiEndPoint: String = "now_playing"
     
     let refreshControl = UIRefreshControl()
     
@@ -147,9 +149,10 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     //*
     
     func refreshMovieData(){
+        self.networkErrorView.isHidden = true
         print("refresh started")
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
-        let url = URL(string:"https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
+        let url = URL(string:"https://api.themoviedb.org/3/movie/\(apiEndPoint)?api_key=\(apiKey)")
         let request = URLRequest(url: url!)
         let session = URLSession(
             configuration: URLSessionConfiguration.default,
@@ -178,9 +181,12 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                         self.refreshControl.endRefreshing()
                         print("refresh finished")
                         MBProgressHUD.hide(for: self.view, animated: true)
-//                        MBProgressHUD.hide(for: self.moviesTableView, animated: true)
-//                        MBProgressHUD.hideHUDForView(self.view, animated: true)
                 }
+            }else{
+                self.networkErrorView.isHidden = false
+                self.refreshControl.endRefreshing()
+                print("refresh finished")
+                MBProgressHUD.hide(for: self.view, animated: true)
             }
         });
         task.resume()

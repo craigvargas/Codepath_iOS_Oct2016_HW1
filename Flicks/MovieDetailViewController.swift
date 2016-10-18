@@ -31,6 +31,9 @@ class MovieDetailViewController: UIViewController {
         refreshMovieDetailView()
         
         //Define view sizing
+        self.titleLabel.sizeToFit()
+        self.titleLabel.frame.origin.x = self.infoView.frame.width/2 - self.titleLabel.frame.width/2
+//        self.infoView.insertSubview(self.overviewLabel, belowSubview: self.titleLabel)
         self.overviewLabel.sizeToFit()
         self.infoView.sizeToFit()
         movieDetailScrollView.contentSize = CGSize(width: movieDetailScrollView.frame.size.width, height: infoView.frame.origin.y + infoView.frame.size.height)
@@ -61,7 +64,6 @@ class MovieDetailViewController: UIViewController {
                 self.moviePosterImageView.setImageWith(posterUrl)
             }
         }
-
     }
     
 

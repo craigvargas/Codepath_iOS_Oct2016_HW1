@@ -16,6 +16,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        //bind constant to the main.storyboard
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        
+        // Set up the first View Controller
+        let nowPlayingNavCtrl = storyboard.instantiateViewController(withIdentifier: "MoviesNavCtrl") as! UINavigationController
+        let nowPlayingViewCtrl = nowPlayingNavCtrl.topViewController as! MoviesViewController
+        nowPlayingViewCtrl.apiEndPoint = "now_playing"
+//        nowPlayingViewCtrl.view.backgroundColor = UIColor.orange
+        nowPlayingViewCtrl.tabBarItem.title = "Now Playing"
+        nowPlayingViewCtrl.tabBarItem.image = UIImage(named: "iconmonstr-video-3-32")
+        print("nav ctrlr: \(nowPlayingViewCtrl.navigationController)")
+        
+        // Set up the second View Controller
+        let topRatedNavCtrl = storyboard.instantiateViewController(withIdentifier: "MoviesNavCtrl") as! UINavigationController
+        let topRatedViewCtrl = topRatedNavCtrl.topViewController as! MoviesViewController
+        topRatedViewCtrl.apiEndPoint = "top_rated"
+//        topRatedViewCtrl.view.backgroundColor = UIColor.purple
+        topRatedViewCtrl.tabBarItem.title = "Top Rated"
+        topRatedViewCtrl.tabBarItem.image = UIImage(named: "iconmonstr-trophy-7-32")
+        
+        // Set up the Tab Bar Controller to have two tabs
+        let tabBarController = UITabBarController()
+        tabBarController.viewControllers = [nowPlayingNavCtrl, topRatedNavCtrl]
+        
+        // Make the Tab Bar Controller the root view controller
+        window?.rootViewController = tabBarController
+        window?.makeKeyAndVisible()
+        
         return true
     }
 

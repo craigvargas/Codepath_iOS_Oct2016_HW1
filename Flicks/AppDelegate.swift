@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let nowPlayingNavCtrl = storyboard.instantiateViewController(withIdentifier: "MoviesNavCtrl") as! UINavigationController
         let nowPlayingViewCtrl = nowPlayingNavCtrl.topViewController as! MoviesViewController
         nowPlayingViewCtrl.apiEndPoint = "now_playing"
-        nowPlayingViewCtrl.view.backgroundColor = UIColor.orange
+//        nowPlayingViewCtrl.view.backgroundColor = UIColor.orange
         nowPlayingViewCtrl.tabBarItem.title = "Now Playing"
         nowPlayingViewCtrl.tabBarItem.image = UIImage(named: "iconmonstr-video-3-32")
         print("nav ctrlr: \(nowPlayingViewCtrl.navigationController)")
@@ -33,7 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let topRatedNavCtrl = storyboard.instantiateViewController(withIdentifier: "MoviesNavCtrl") as! UINavigationController
         let topRatedViewCtrl = topRatedNavCtrl.topViewController as! MoviesViewController
         topRatedViewCtrl.apiEndPoint = "top_rated"
-        topRatedViewCtrl.view.backgroundColor = UIColor.purple
+//        topRatedViewCtrl.view.backgroundColor = UIColor.purple
         topRatedViewCtrl.tabBarItem.title = "Top Rated"
         topRatedViewCtrl.tabBarItem.image = UIImage(named: "iconmonstr-trophy-7-32")
         

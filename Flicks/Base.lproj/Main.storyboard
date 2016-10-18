@@ -68,11 +68,56 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.25882352939999997" green="0.29411764709999999" blue="0.3294117647" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="Uk2-iZ-ABb" userLabel="Movies Collection View">
+                                <frame key="frameInset" minY="65" width="320" height="454"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Bov-ir-YJI">
+                                    <size key="itemSize" width="150" height="247"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="MovieThumb" id="4Jg-y6-qOl" customClass="MovieCollectionViewCell" customModule="Flicks" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="150" height="247"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="150" height="247"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="9AL-nT-yGL">
+                                                    <frame key="frameInset" width="150" height="247"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                            </subviews>
+                                        </view>
+                                        <connections>
+                                            <outlet property="moviePosterImageView" destination="9AL-nT-yGL" id="UrH-11-q7y"/>
+                                            <segue destination="KMY-YY-gNX" kind="push" id="q4e-zi-bBi"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="Sqn-fh-hlD">
+                                <frame key="frameInset" minX="108" minY="490" width="120" height="29"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="List"/>
+                                    <segment title="Grid"/>
+                                </segments>
+                                <connections>
+                                    <action selector="onListGridToggle:" destination="BYZ-38-t0r" eventType="valueChanged" id="8UR-Hv-Xgq"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <navigationItem key="navigationItem" id="B2e-9o-fdi"/>
                     <connections>
+                        <outlet property="listGridSegCtrl" destination="Sqn-fh-hlD" id="43W-cK-Y6N"/>
+                        <outlet property="moviesCollectionView" destination="Uk2-iZ-ABb" id="cyz-0l-2Ur"/>
+                        <outlet property="moviesCollectionViewFlowLayout" destination="Bov-ir-YJI" id="9Yl-9h-TAq"/>
                         <outlet property="moviesTableView" destination="pev-Xf-Sv2" id="kDX-av-y7w"/>
                         <outlet property="networkErrorView" destination="zzz-aZ-RKn" id="KI5-LP-t41"/>
                     </connections>
@@ -160,4 +205,7 @@
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination" type="retina4_7.fullscreen"/>
     </simulatedMetricsContainer>
+    <inferredMetricsTieBreakers>
+        <segue reference="q4e-zi-bBi"/>
+    </inferredMetricsTieBreakers>
 </document>
